@@ -4,19 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const csrfMiddleware = require("electrode-csrf-jwt").expressMiddleware;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
-const csrfMiddleware = require("electrode-csrf-jwt").expressMiddleware;
-const csrfOptions = {
-  secret: "test",
-  expiresIn: 60
-};
-
-app.use(csrfMiddleware(csrfOptions));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +22,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// csrf-jwt plugin configuration, should come after cookieParser() and before routes `app.use('/', index);`
+const csrfOptions = {
+  secret: "test",
+  expiresIn: 60
+};
+
+app.use(csrfMiddleware(csrfOptions));
 
 app.use('/', index);
 app.use('/users', users);

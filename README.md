@@ -42,8 +42,9 @@ npm install electrode-csrf-jwt --save
 ```javascript
 const csrfMiddleware = require("electrode-csrf-jwt").expressMiddleware;
 
-var app = express();
 
+
+// csrf-jwt plugin configuration, should come after cookieParser() and before routes `app.use('/', index);`
 const csrfOptions = {
   secret: "test",
   expiresIn: 60
@@ -167,7 +168,6 @@ router.post('/2', function(req, res, next) {
 
 ```bash
 npm start
-
 ```
 
 * Navigate to `http://localhost:3000/csrf` to test the CSRF features
